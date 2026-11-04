@@ -266,6 +266,7 @@
     <Compile Include="Operations\Bootstrap\IntegrityOperationTests.cs" />
     <Compile Include="Operations\Bootstrap\BootstrapOperationSequenceTests.cs" />
     <Compile Include="Operations\Bootstrap\CrashLogOperationTests.cs" />
+    <Compile Include="Operations\Bootstrap\DebugStreamHostOperationTests.cs" />
     <Compile Include="Operations\Session\ClientTerminationOperationTests.cs" />
     <Compile Include="Operations\Session\ConfigurationOperationTests.cs" />
     <Compile Include="Operations\Session\DisclaimerOperationTests.cs" />
@@ -314,6 +315,10 @@
     <ProjectReference Include="..\SafeExamBrowser.Core.Contracts\SafeExamBrowser.Core.Contracts.csproj">
       <Project>{fe0e1224-b447-4b14-81e7-ed7d84822aa0}</Project>
       <Name>SafeExamBrowser.Core.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SafeExamBrowser.DebugStream\SafeExamBrowser.DebugStream.csproj">
+      <Project>{d6cdfec0-e608-4494-9da3-06e1f8dfe40d}</Project>
+      <Name>SafeExamBrowser.DebugStream</Name>
     </ProjectReference>
     <ProjectReference Include="..\SafeExamBrowser.Core\SafeExamBrowser.Core.csproj">
       <Project>{3D6FDBB6-A4AF-4626-BB2B-BF329D44F9CC}</Project>

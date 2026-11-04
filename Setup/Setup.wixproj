@@ -34,6 +34,7 @@
   <ItemGroup>
     <Compile Include="Components\Application.wxs" />
     <Compile Include="Components\Configuration.wxs" />
+    <Compile Include="Components\DebugMode.wxs" />
     <Compile Include="Components\Reset.wxs" />
     <Compile Include="Components\Service.wxs" />
     <Compile Include="Directories.wxs" />

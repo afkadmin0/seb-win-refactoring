@@ -112,6 +112,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeExamBrowser.Integrity",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeExamBrowser.Integrity.Contracts", "SafeExamBrowser.Integrity.Contracts\SafeExamBrowser.Integrity.Contracts.csproj", "{BD45A138-10DC-429C-9D9B-D2F527FBD7DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeExamBrowser.DebugStream", "SafeExamBrowser.DebugStream\SafeExamBrowser.DebugStream.csproj", "{D6CDFEC0-E608-4494-9DA3-06E1F8DFE40D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeExamBrowser.DebugStream.UnitTests", "SafeExamBrowser.DebugStream.UnitTests\SafeExamBrowser.DebugStream.UnitTests.csproj", "{ACB5B961-0B2F-4557-9906-D49213FD26B6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -501,6 +505,22 @@ Global
 		{BD45A138-10DC-429C-9D9B-D2F527FBD7DE}.Release|x64.Build.0 = Release|x64
 		{BD45A138-10DC-429C-9D9B-D2F527FBD7DE}.Release|x86.ActiveCfg = Release|x86
 		{BD45A138-10DC-429C-9D9B-D2F527FBD7DE}.Release|x86.Build.0 = Release|x86
+		{D6CDFEC0-E608-4494-9DA3-06E1F8DFE40D}.Debug|x64.ActiveCfg = Debug|x64
+		{D6CDFEC0-E608-4494-9DA3-06E1F8DFE40D}.Debug|x64.Build.0 = Debug|x64
+		{D6CDFEC0-E608-4494-9DA3-06E1F8DFE40D}.Debug|x86.ActiveCfg = Debug|x86
+		{D6CDFEC0-E608-4494-9DA3-06E1F8DFE40D}.Debug|x86.Build.0 = Debug|x86
+		{D6CDFEC0-E608-4494-9DA3-06E1F8DFE40D}.Release|x64.ActiveCfg = Release|x64
+		{D6CDFEC0-E608-4494-9DA3-06E1F8DFE40D}.Release|x64.Build.0 = Release|x64
+		{D6CDFEC0-E608-4494-9DA3-06E1F8DFE40D}.Release|x86.ActiveCfg = Release|x86
+		{D6CDFEC0-E608-4494-9DA3-06E1F8DFE40D}.Release|x86.Build.0 = Release|x86
+		{ACB5B961-0B2F-4557-9906-D49213FD26B6}.Debug|x64.ActiveCfg = Debug|x64
+		{ACB5B961-0B2F-4557-9906-D49213FD26B6}.Debug|x64.Build.0 = Debug|x64
+		{ACB5B961-0B2F-4557-9906-D49213FD26B6}.Debug|x86.ActiveCfg = Debug|x86
+		{ACB5B961-0B2F-4557-9906-D49213FD26B6}.Debug|x86.Build.0 = Debug|x86
+		{ACB5B961-0B2F-4557-9906-D49213FD26B6}.Release|x64.ActiveCfg = Release|x64
+		{ACB5B961-0B2F-4557-9906-D49213FD26B6}.Release|x64.Build.0 = Release|x64
+		{ACB5B961-0B2F-4557-9906-D49213FD26B6}.Release|x86.ActiveCfg = Release|x86
+		{ACB5B961-0B2F-4557-9906-D49213FD26B6}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

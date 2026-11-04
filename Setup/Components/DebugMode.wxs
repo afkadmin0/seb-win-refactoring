@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Lets an administrator install a build with the internal debug tools (Firefox stream, relaxed clipboard / keyboard restrictions,
+    AutoHotkey launcher - see SafeExamBrowser.DebugStream\README.md) turned on, without needing a separate Debug build:
+
+        msiexec /i Setup.msi ENABLEDEBUGMODE=1
+
+    This must stay opt-in: a plain "msiexec /i Setup.msi" (or a double-click install) must leave DebugMode at 0. These tools give an
+    exam session full, unrestricted access to Firefox and the clipboard of the machine - never pass this flag for an installation
+    which will be used for anything but internal testing.
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <Property Id="ENABLEDEBUGMODE" Secure="yes" Value="0" />
+
+        <ComponentGroup Id="DebugModeComponents">
+            <Component Id="DebugModeComponent" Directory="InstallFolder" Guid="1373CB53-1CBF-4F3F-8F5C-3545AEC1D638">
+                <RegistryValue Root="HKLM" Key="SOFTWARE\SafeExamBrowser" Name="DebugMode" Type="integer" Value="[ENABLEDEBUGMODE]" KeyPath="yes" />
+            </Component>
+        </ComponentGroup>
+    </Fragment>
+</Wix>

@@ -15,6 +15,7 @@ using SafeExamBrowser.Applications.Contracts;
 using SafeExamBrowser.Browser;
 using SafeExamBrowser.Client.Communication;
 using SafeExamBrowser.Client.Contracts;
+using SafeExamBrowser.Client.DebugTools;
 using SafeExamBrowser.Client.Notifications;
 using SafeExamBrowser.Client.Operations;
 using SafeExamBrowser.Client.Responsibilities;
@@ -26,6 +27,7 @@ using SafeExamBrowser.Configuration.Cryptography;
 using SafeExamBrowser.Core.Contracts.OperationModel;
 using SafeExamBrowser.Core.Operations;
 using SafeExamBrowser.Core.ResponsibilityModel;
+using SafeExamBrowser.DebugStream.Tools;
 using SafeExamBrowser.I18n;
 using SafeExamBrowser.I18n.Contracts;
 using SafeExamBrowser.Integrity;
@@ -97,6 +99,9 @@ namespace SafeExamBrowser.Client
 		private WindowGuard windowGuard;
 		private IUserInterfaceFactory uiFactory;
 
+		private IClipboard clipboard;
+		private AutoHotkeyLauncher debugAutoHotkey;
+
 		internal ClientController ClientController { get; private set; }
 
 		internal void BuildObjectGraph(Action shutdown)
@@ -105,6 +110,8 @@ namespace SafeExamBrowser.Client
 
 			InitializeLogging();
 			InitializeText();
+
+			debugAutoHotkey = new AutoHotkeyLauncher(ModuleLogger(nameof(AutoHotkeyLauncher)));
 
 			var processFactory = new ProcessFactory(ModuleLogger(nameof(ProcessFactory)));
 
@@ -123,7 +130,6 @@ namespace SafeExamBrowser.Client
 			userInfo = new UserInfo(ModuleLogger(nameof(UserInfo)));
 
 			var applicationFactory = new ApplicationFactory(applicationMonitor, ModuleLogger(nameof(ApplicationFactory)), nativeMethods, processFactory, new Registry(ModuleLogger(nameof(Registry))));
-			var clipboard = new Clipboard(ModuleLogger(nameof(Clipboard)), nativeMethods);
 			var coordinator = new Coordinator();
 			var displayMonitor = new DisplayMonitor(ModuleLogger(nameof(DisplayMonitor)), nativeMethods, systemInfo);
 			var explorerShell = new ExplorerShell(ModuleLogger(nameof(ExplorerShell)), nativeMethods);
@@ -131,7 +137,9 @@ namespace SafeExamBrowser.Client
 			var runtimeProxy = new RuntimeProxy(runtimeHostUri, new ProxyObjectFactory(), ModuleLogger(nameof(RuntimeProxy)), Interlocutor.Client);
 			var sentinel = new SystemSentinel(ModuleLogger(nameof(SystemSentinel)), nativeMethods, new Registry(ModuleLogger(nameof(Registry))));
 
-			var operations = BuildOperations(applicationFactory, clipboard, displayMonitor, fileSystemDialog, runtimeProxy);
+			clipboard = new Clipboard(ModuleLogger(nameof(Clipboard)), nativeMethods);
+
+			var operations = BuildOperations(applicationFactory, displayMonitor, fileSystemDialog, runtimeProxy);
 			var responsibilities = BuildResponsibilities(coordinator, displayMonitor, explorerShell, runtimeProxy, sentinel, shutdown);
 
 			context.HashAlgorithm = new HashAlgorithm();
@@ -156,7 +164,6 @@ namespace SafeExamBrowser.Client
 
 		private ClientOperationSequence BuildOperations(
 			IApplicationFactory applicationFactory,
-			IClipboard clipboard,
 			IDisplayMonitor displayMonitor,
 			IFileSystemDialog fileSystemDialog,
 			IRuntimeProxy runtimeProxy)
@@ -182,6 +189,11 @@ namespace SafeExamBrowser.Client
 			operations.Enqueue(new LazyInitializationOperation(BuildServerOperation));
 			operations.Enqueue(new LazyInitializationOperation(BuildProctoringOperation));
 			operations.Enqueue(new ClipboardOperation(context, clipboard, logger));
+
+			// IMPORTANT: Must be enqueued last, so its keyboard hook is called before all others (and thus sees all keys). Always
+			// enqueued, but does nothing until debug mode is both enabled (see SafeExamBrowser.DebugStream.DebugModeConfiguration)
+			// and activated by the user (its own hotkey, pressed for the first time during the session).
+			operations.Enqueue(new LazyInitializationOperation(BuildDebugModeOperation));
 
 			return new ClientOperationSequence(logger, operations, splashScreen);
 		}
@@ -279,6 +291,13 @@ namespace SafeExamBrowser.Client
 			context.Browser = browser;
 
 			return operation;
+		}
+
+		private IOperation BuildDebugModeOperation()
+		{
+			var activator = new DebugStreamActivator(ModuleLogger(nameof(DebugStreamActivator)), nativeMethods);
+
+			return new DebugModeOperation(context, applicationMonitor, activator, clipboard, debugAutoHotkey, logger);
 		}
 
 		private IOperation BuildClientHostOperation()

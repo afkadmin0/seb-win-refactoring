@@ -54,6 +54,9 @@ namespace SafeExamBrowser.Logging
 		{
 			var content = string.Join(Environment.NewLine, data);
 
+			// The containing directory is normally created once a session starts, but this is called during application bootstrap,
+			// i.e. possibly before any session has ever run (e.g. a fresh installation) - so it cannot be assumed to exist yet.
+			fileSystem.CreateDirectory(Path.GetDirectoryName(path));
 			fileSystem.Save(content, path);
 			logger.Info($"Saved crash log with {data.Length} items.");
 		}

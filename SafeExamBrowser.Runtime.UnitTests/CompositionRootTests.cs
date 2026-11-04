@@ -180,13 +180,17 @@ namespace SafeExamBrowser.Runtime.UnitTests
 			var sequence = GetField<object>(controller, "bootstrapSequence");
 			var operations = GetField<IEnumerable>(sequence, "operations");
 
-			Assert.AreSequenceEqual(new[]
+			var expected = new List<Type>
 			{
 				typeof(I18nOperation),
 				typeof(CrashLogOperation),
 				typeof(CommunicationHostOperation),
-				typeof(IntegrityOperation)
-			}, TypesOf(operations));
+				typeof(IntegrityOperation),
+				// Always enqueued (in every configuration), but a no-op unless debug mode is enabled - see DebugModeConfiguration.
+				typeof(DebugStreamHostOperation)
+			};
+
+			Assert.AreSequenceEqual(expected, TypesOf(operations));
 		}
 
 		private static void AssertResponsibilities(RuntimeController controller)

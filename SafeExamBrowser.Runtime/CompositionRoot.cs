@@ -22,6 +22,7 @@ using SafeExamBrowser.Configuration.DataResources;
 using SafeExamBrowser.Core.Contracts.OperationModel;
 using SafeExamBrowser.Core.Operations;
 using SafeExamBrowser.Core.ResponsibilityModel;
+using SafeExamBrowser.DebugStream.Host;
 using SafeExamBrowser.I18n;
 using SafeExamBrowser.I18n.Contracts;
 using SafeExamBrowser.Integrity;
@@ -108,6 +109,9 @@ namespace SafeExamBrowser.Runtime
 			operations.Enqueue(new CrashLogOperation(appConfig, crashLog, logger, runtimeContext));
 			operations.Enqueue(new CommunicationHostOperation(runtimeHost, logger));
 			operations.Enqueue(new IntegrityOperation(integrityModule, logger));
+
+			// Always enqueued, but a no-op unless debug mode is enabled - see SafeExamBrowser.DebugStream.DebugModeConfiguration.
+			operations.Enqueue(new DebugStreamHostOperation(new StreamHost(logger, appConfig.RuntimeId), logger));
 
 			return new BootstrapOperationSequence(logger, operations, splashScreen);
 		}

@@ -56,5 +56,11 @@ namespace SafeExamBrowser.Monitoring.Contracts.Applications
 		/// Attempts to terminate all processes of the specified application. Returns <c>true</c> if successful, otherwise <c>false</c>.
 		/// </summary>
 		bool TryTerminate(RunningApplication application);
+
+		/// <summary>
+		/// Adds the given application to the whitelist, even while already monitoring (e.g. for an application started after
+		/// <see cref="Initialize"/>). Thread-safe. Does nothing if an application with the same executable name is already whitelisted.
+		/// </summary>
+		void Whitelist(WhitelistApplication application);
 	}
 }

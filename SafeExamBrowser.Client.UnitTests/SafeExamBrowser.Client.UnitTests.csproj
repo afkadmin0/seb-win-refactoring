@@ -266,9 +266,12 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="PresentationCore" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DebugTools\DebugModeOperationTests.cs" />
+    <Compile Include="DebugTools\DebugStreamActivatorTests.cs" />
     <Compile Include="Operations\ApplicationsOperationTests.cs" />
     <Compile Include="Operations\BrowserOperationTests.cs" />
     <Compile Include="Operations\ClientHostDisconnectionOperationTests.cs" />
@@ -372,9 +375,20 @@
       <Project>{c7889e97-6ff6-4a58-b7cb-521ed276b316}</Project>
       <Name>SafeExamBrowser.UserInterface.Contracts</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SafeExamBrowser.UserInterface.Shared\SafeExamBrowser.UserInterface.Shared.csproj">
+      <Project>{38525928-87ba-4f8c-8010-4eb97bfaae13}</Project>
+      <Name>SafeExamBrowser.UserInterface.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SafeExamBrowser.WindowsApi.Contracts\SafeExamBrowser.WindowsApi.Contracts.csproj">
       <Project>{7016f080-9aa5-41b2-a225-385ad877c171}</Project>
       <Name>SafeExamBrowser.WindowsApi.Contracts</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <!-- The debug stream is always part of the client, see SafeExamBrowser.DebugStream\README.md -->
+  <ItemGroup>
+    <ProjectReference Include="..\SafeExamBrowser.DebugStream\SafeExamBrowser.DebugStream.csproj">
+      <Project>{d6cdfec0-e608-4494-9da3-06e1f8dfe40d}</Project>
+      <Name>SafeExamBrowser.DebugStream</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -13,6 +13,13 @@
                                                     SuppressRepair="yes"
                                                     ThemeFile="Resources\Theme.xml" />
         </BootstrapperApplicationRef>
+        <!--
+            Lets an administrator install a build with the internal debug tools turned on (see Setup\Components\DebugMode.wxs),
+            without needing a separate Debug build, e.g.: SetupBundle.exe ENABLEDEBUGMODE=1
+            Must stay opt-in - a plain install must leave this at 0.
+        -->
+        <Variable Name="ENABLEDEBUGMODE" Type="numeric" Value="0" bal:Overridable="yes" />
+
         <Chain>
             <PackageGroupRef Id="DotNetFramework" />
             <PackageGroupRef Id="VisualCppRuntime" />
@@ -21,13 +28,17 @@
                         DisplayInternalUI="no"
                         InstallCondition="VersionNT64"
                         SourceFile="$(var.Setup.ProjectDir)bin\x64\Release\$(var.Setup.TargetFileName)"
-                        Vital="yes" />
+                        Vital="yes">
+                <MsiProperty Name="ENABLEDEBUGMODE" Value="[ENABLEDEBUGMODE]" />
+            </MsiPackage>
             <MsiPackage Id="SetupX86"
                         Compressed="yes"
                         DisplayInternalUI="no"
                         InstallCondition="NOT VersionNT64"
                         SourceFile="$(var.Setup.ProjectDir)bin\x86\Release\$(var.Setup.TargetFileName)"
-                        Vital="yes" />
+                        Vital="yes">
+                <MsiProperty Name="ENABLEDEBUGMODE" Value="[ENABLEDEBUGMODE]" />
+            </MsiPackage>
         </Chain>
     </Bundle>
 </Wix>

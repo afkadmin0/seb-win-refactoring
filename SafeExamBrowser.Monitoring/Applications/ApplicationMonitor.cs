@@ -28,6 +28,10 @@ namespace SafeExamBrowser.Monitoring.Applications
 		private readonly Timer timer;
 		private readonly IList<WhitelistApplication> whitelist;
 
+		// Guards whitelist: Initialize() populates it before Start(), but Whitelist() may add to it at any later point while the
+		// timer and the native hooks are concurrently reading it on their own threads.
+		private readonly object whitelistLock = new object();
+
 		private Guid? captureHookId;
 		private Guid? foregroundHookId;
 		private IList<IProcess> processes;
@@ -120,6 +124,20 @@ namespace SafeExamBrowser.Monitoring.Applications
 			}
 
 			return success;
+		}
+
+		public void Whitelist(WhitelistApplication application)
+		{
+			lock (whitelistLock)
+			{
+				var alreadyWhitelisted = whitelist.Any(a => a.ExecutableName.Equals(application.ExecutableName, StringComparison.OrdinalIgnoreCase));
+
+				if (!alreadyWhitelisted)
+				{
+					whitelist.Add(application);
+					logger.Debug($"Whitelisted application '{application.ExecutableName}' while already monitoring.");
+				}
+			}
 		}
 
 		private void SystemEvent_WindowChanged(IntPtr handle)
@@ -323,31 +341,34 @@ namespace SafeExamBrowser.Monitoring.Applications
 
 		private void InitializeWhitelist(ApplicationSettings settings, InitializationResult result)
 		{
-			foreach (var application in settings.Whitelist)
+			lock (whitelistLock)
 			{
-				whitelist.Add(application);
-			}
-
-			logger.Debug($"Initialized whitelist with {whitelist.Count} applications{(whitelist.Any() ? $": {string.Join(", ", whitelist.Select(a => a.ExecutableName))}" : ".")}");
-
-			foreach (var process in processes)
-			{
-				foreach (var application in whitelist)
+				foreach (var application in settings.Whitelist)
 				{
-					var isWhitelisted = BelongsToApplication(process, application);
+					whitelist.Add(application);
+				}
 
-					if (isWhitelisted)
+				logger.Debug($"Initialized whitelist with {whitelist.Count} applications{(whitelist.Any() ? $": {string.Join(", ", whitelist.Select(a => a.ExecutableName))}" : ".")}");
+
+				foreach (var process in processes)
+				{
+					foreach (var application in whitelist)
 					{
-						if (!application.AllowRunning && !application.AutoTerminate)
-						{
-							AddForTermination(application.ExecutableName, process, result);
-						}
-						else if (!application.AllowRunning && application.AutoTerminate && !TryTerminate(process))
-						{
-							AddFailed(application.ExecutableName, process, result);
-						}
+						var isWhitelisted = BelongsToApplication(process, application);
 
-						break;
+						if (isWhitelisted)
+						{
+							if (!application.AllowRunning && !application.AutoTerminate)
+							{
+								AddForTermination(application.ExecutableName, process, result);
+							}
+							else if (!application.AllowRunning && application.AutoTerminate && !TryTerminate(process))
+							{
+								AddFailed(application.ExecutableName, process, result);
+							}
+
+							break;
+						}
 					}
 				}
 			}
@@ -389,13 +410,16 @@ namespace SafeExamBrowser.Monitoring.Applications
 		{
 			applicationId = default;
 
-			foreach (var application in whitelist)
+			lock (whitelistLock)
 			{
-				if (BelongsToApplication(process, application))
+				foreach (var application in whitelist)
 				{
-					applicationId = application.Id;
+					if (BelongsToApplication(process, application))
+					{
+						applicationId = application.Id;
 
-					return true;
+						return true;
+					}
 				}
 			}
 

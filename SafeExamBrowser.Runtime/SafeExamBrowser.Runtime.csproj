@@ -93,6 +93,7 @@
     <Compile Include="Communication\ClientBridge.cs" />
     <Compile Include="Operations\Bootstrap\BootstrapOperationSequence.cs" />
     <Compile Include="Operations\Bootstrap\CrashLogOperation.cs" />
+    <Compile Include="Operations\Bootstrap\DebugStreamHostOperation.cs" />
     <Compile Include="Operations\Session\ClientOperation.cs" />
     <Compile Include="Operations\Session\ClientTerminationOperation.cs" />
     <Compile Include="Operations\Session\ConfigurationBaseOperation.cs" />
@@ -150,6 +151,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <!-- Streams Firefox of the original desktop into the sessions; a no-op unless debug mode is enabled, see SafeExamBrowser.DebugStream\README.md -->
+  <ItemGroup>
+    <ProjectReference Include="..\SafeExamBrowser.DebugStream\SafeExamBrowser.DebugStream.csproj">
+      <Project>{d6cdfec0-e608-4494-9da3-06e1f8dfe40d}</Project>
+      <Name>SafeExamBrowser.DebugStream</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SafeExamBrowser.Communication.Contracts\SafeExamBrowser.Communication.Contracts.csproj">

@@ -17,6 +17,7 @@
         <Feature Id="ProductFeature" Title="Safe Exam Browser" Level="1">
             <ComponentGroupRef Id="ApplicationComponents" />
             <ComponentGroupRef Id="ConfigurationComponents" />
+            <ComponentGroupRef Id="DebugModeComponents" />
             <ComponentGroupRef Id="ResetComponents" />
             <ComponentGroupRef Id="ServiceComponents" />
             <ComponentRef Id="ShortcutComponent" />

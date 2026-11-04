@@ -75,6 +75,8 @@
     <Compile Include="ClientContext.cs" />
     <Compile Include="ClientController.cs" />
     <Compile Include="Contracts\ICoordinator.cs" />
+    <Compile Include="DebugTools\DebugModeOperation.cs" />
+    <Compile Include="DebugTools\DebugStreamActivator.cs" />
     <Compile Include="Coordinator.cs" />
     <Compile Include="Notifications\VerificatorNotification.cs" />
     <Compile Include="Operations\ClientHostDisconnectionOperation.cs" />
@@ -135,6 +137,13 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <!-- Streams Firefox of the original desktop into the sessions; a no-op unless debug mode is enabled, see SafeExamBrowser.DebugStream\README.md -->
+  <ItemGroup>
+    <ProjectReference Include="..\SafeExamBrowser.DebugStream\SafeExamBrowser.DebugStream.csproj">
+      <Project>{d6cdfec0-e608-4494-9da3-06e1f8dfe40d}</Project>
+      <Name>SafeExamBrowser.DebugStream</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SafeExamBrowser.Applications.Contracts\SafeExamBrowser.Applications.Contracts.csproj">
